@@ -1,0 +1,35 @@
+#include <Arduino.h>
+#include "lmic.h"
+#include <hal/hal.h>
+
+#define LEDPIN 2
+
+// Copy the value from Application EUI from the TTN console in LSB mode
+static const u1_t PROGMEM APPEUI[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+// Copy the value from Device EUI from the TTN console in LSB mode.
+static const u1_t PROGMEM DEVEUI[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+// This key should be in big endian format (or, since it is not really a
+// number but a block of memory, endianness does not really apply). In
+// practice, a key taken from ttnctl can be copied as-is. Anyway its in MSB mode.
+static const u1_t PROGMEM APPKEY[16] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+// Schedule TX every this many seconds
+const unsigned TX_INTERVAL = 145;
+
+// seconds to warmup SDS011
+const unsigned SDS_WARMUP = 15;
+
+#define SDS_PIN_TX 12 // connect to RX on the SDS011
+#define SDS_PIN_RX 13 // connect to TX on the SDS011
+
+#define BME_ADDRESS 0x77 //0x77
+
+// Pins for the Heltec ESP32 Lora board/ TTGO Lora32 with 3D metal antenna
+const lmic_pinmap lmic_pins = {
+    .nss = 18,
+    .rxtx = LMIC_UNUSED_PIN,
+    .rst = 14,
+    .dio = {26, 33, 32} //
+};
